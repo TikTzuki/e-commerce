@@ -1,29 +1,16 @@
-import {KeycloakAuthGuard} from "keycloak-angular";
 import {Injectable} from "@angular/core";
-import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {SecurityService} from "../shared/services/security.service";
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard extends KeycloakAuthGuard {
-  constructor(router: Router, keycloak: SecurityService) {
-    super(router, keycloak);
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router, private securityService: SecurityService) {
   }
 
-  async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
-    console.log(this.authenticated)
-    if (!this.authenticated) {
-      await this.keycloakAngular.login({
-        redirectUri: window.location.origin + state.url,
-      });
-    }
-    return this.authenticated;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
+    // Auth disabled - allow all routes
+    return true;
   }
-
-  public isAuthenticated(): boolean {
-    return this.authenticated;
-  }
-
 }

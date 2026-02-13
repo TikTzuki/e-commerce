@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule, routing} from './app-routing.module';
@@ -15,28 +15,10 @@ import {ProductDetailsModule} from "./product-details/productDetails.module";
 import {SlickCarouselModule} from 'ngx-slick-carousel';
 import {ToastrModule} from 'ngx-toastr';
 import {SharedModule} from "./shared/shared.module";
-import {KeycloakAngularModule} from "keycloak-angular";
 import {CommonModule} from "@angular/common";
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far} from '@fortawesome/free-regular-svg-icons';
-import {environment} from "../environments/environment";
-import {SecurityService} from "./shared/services/security.service";
 
-function initializeKeycloak(keycloak: SecurityService) {
-  return () =>
-    keycloak.init({
-      config: {
-        realm: 'ecommerce',
-        url: environment.authHost,
-        clientId: 'sale-frontend'
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/assets/silent-check-sso.html'
-      }
-    });
-}
 @NgModule({
   declarations: [
     AppComponent
@@ -45,7 +27,6 @@ function initializeKeycloak(keycloak: SecurityService) {
     ReactiveFormsModule,
     BrowserModule,
     NgbModule,
-    KeycloakAngularModule,
     ToastrModule.forRoot(),
     routing,
     HttpClientModule,
@@ -59,14 +40,7 @@ function initializeKeycloak(keycloak: SecurityService) {
     ProductDetailsModule,
     SlickCarouselModule
   ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [SecurityService]
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent],
   exports: [
     CommonModule,
